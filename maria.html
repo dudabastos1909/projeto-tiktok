@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação de Perfil Social - Fabiano Zanzin</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #000;
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 450px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        
+        .header {
+            padding: 10px 15px;
+            text-align: center;
+        }
+
+        .profile-pic img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .username h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .username p {
+            margin: 2px 0 10px 0;
+            font-size: 14px;
+            color: #888;
+        }
+
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 5px 0 15px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+        }
+
+      
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 15px;
+        }
+
+        .btn-follow, .btn-message {
+            padding: 8px 30px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        
+        .btn-follow {
+            background-color: #fe2c55; 
+            color: white;
+            flex-grow: 1;
+        }
+        
+        
+        .btn-follow.following {
+            background-color: #eee;
+            color: #000;
+            border: 1px solid #ddd;
+        }
+
+        .btn-message {
+            background-color: #eee;
+            color: #000;
+            border: 1px solid #ddd;
+            padding: 8px 20px;
+        }
+
+       
+        .bio {
+            text-align: center;
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: #007bff;
+            text-decoration: none;
+            display: block;
+            margin-top: 5px;
+        }
+
+       
+        .video-nav {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid #eee;
+            margin-top: 15px;
+        }
+
+        .nav-item {
+            padding: 10px 0;
+            font-size: 15px;
+            color: #888;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #000;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background-color: #eee; 
+        }
+
+        .video-card {
+            position: relative;
+            background-color: #ddd;
+            padding-bottom: 133.33%; 
+            overflow: hidden;
+        }
+
+        .video-card.pinned::before {
+            content: 'Afixado';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background-color: #fe2c55;
+            color: white;
+            padding: 2px 5px;
+            font-size: 10px;
+            font-weight: bold;
+            z-index: 10;
+            border-radius: 2px;
+        }
+
+        .video-card img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8; 
+        }
+
+        .video-views {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .video-views::before {
+            content: '▶'; 
+            margin-right: 4px;
+        }
+
+     
+        
+        .mobile-footer {
+            height: 50px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            position: sticky;
+            bottom: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+
+        <div class="header">
+            <div class="profile-pic">
+                <img src="charli.jpg" alt="Foto de Perfil">
+            </div>
+            <div class="username">
+                <h2>Charli D'amelio</h2>
+                <p>@charlidamelio</p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">1834</div>
+                <div class="stat-label">Seguindo</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">10 mi</div>
+                <div class="stat-label">Seguidores</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">200 milhões</div>
+                <div class="stat-label">Curtidas</div>
+            </div>
+        </div>
+
+        <div class="actions">
+       
+            <button class="btn-message">Editar perfil</button>
+        </div>
+
+        <div class="bio">
+            <p>Hi :) </p>
+            <div class="links">
+               
+            </div>
+        </div>
+
+        <div class="video-nav">
+            <div class="nav-item active">Vídeos</div>
+            <div class="nav-item">Vendas</div>
+            <div class="nav-item">Republicados</div>
+        </div>
+
+        <div class="video-grid">
+            <div class="video-card pinned">
+                <img src="video charli 1.jpg" alt="Thumbnail de Vídeo">
+                <div class="video-views">10 mi</div>
+            </div>
+            <div class="video-card pinned">
+                <img src="video charli 2.jpg" alt="Thumbnail de Vídeo">
+                <div class="video-views">53,4 mi</div>
+            </div>
+            <div class="video-card pinned">
+                <img src="charli 5.jpg" alt="Thumbnail de Vídeo">
+                <div class="video-views">3 mi</div>
+            </div>
+           
+        </div>
+
+        <div class="mobile-footer"></div>
+
+    </div>
+
+    <script>
+        function toggleFollow() {
+            
+            const button = document.getElementById('followButton');
+            
+            
+            const isFollowing = button.classList.contains('following');
+       
+            
+        }
+    </script>
+
+</body>
+</html>
