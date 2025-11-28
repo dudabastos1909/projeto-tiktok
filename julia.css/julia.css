@@ -1,0 +1,312 @@
+/* Reset Básico */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Container Principal para Simular o Tela do Celular */
+.profile-container {
+    width: 100%;
+    max-width: 450px; /* Limite de largura para simular um celular/tablet */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 60px; /* Espaço para o menu inferior */
+}
+
+/* --- HEADER --- */
+.profile-header {
+    padding: 15px;
+    padding-top: 50px; /* Para simular a barra de status do celular */
+    text-align: center;
+}
+
+.header-icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.2em;
+}
+
+.profile-info {
+    margin: 20px 0;
+}
+
+.avatar-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #ccc;
+}
+
+.username {
+    font-weight: bold;
+    margin: 5px 0 0;
+    font-size: 1.1em;
+}
+
+.handle {
+    color: #888;
+    font-size: 0.9em;
+    margin: 0;
+}
+
+/* Estatísticas */
+.stats-row {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-weight: bold;
+    display: block;
+    font-size: 1em;
+}
+
+.stat-label {
+    color: #888;
+    font-size: 0.8em;
+}
+
+/* Botões de Ação */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-primary {
+    background-color: #fe2c55; /* Cor do botão de seguir do TikTok */
+    color: white;
+    border: none;
+    padding: 8px 30px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background-color: #f1f1f1;
+    color: #333;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-more {
+    background-color: #f1f1f1;
+    color: #333;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+/* --- BIO E LINKS --- */
+.profile-bio {
+    padding: 0 15px;
+    text-align: center;
+}
+
+.bio-text {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.bio-link {
+    color: #007bff;
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.showcase-tag {
+    display: inline-block;
+    background-color: #ffe0e6;
+    color: #fe2c55;
+    padding: 4px 8px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* --- Ícones de Ação e Separador --- */
+.action-icons-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    color: #333;
+    font-size: 1.2em;
+    padding: 10px 0;
+}
+
+.separator {
+    border: none;
+    height: 1px;
+    background-color: #eee;
+    margin: 0;
+}
+
+/* --- NAVEGAÇÃO DE CATEGORIAS --- */
+.category-nav {
+    display: flex;
+    overflow-x: auto; /* Permite scroll horizontal */
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap; /* Mantém os botões na mesma linha */
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    margin-right: 10px;
+    font-size: 0.9em;
+    color: #888;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-button:hover, .nav-button.active {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+/* --- GALERIA DE VÍDEOS --- */
+.video-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas de largura igual */
+    gap: 2px; /* Espaço pequeno entre os vídeos */
+    padding: 2px;
+}
+
+.video-item {
+    position: relative;
+    aspect-ratio: 9/16; /* Proporção de vídeo vertical */
+    overflow: hidden;
+    background-color: #000;
+}
+
+.video-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.affix-tag {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: #fe2c55;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.7em;
+    font-weight: bold;
+}
+
+.play-count {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    color: white;
+    font-size: 0.8em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+.video-desc {
+    position: absolute;
+    bottom: 25px;
+    left: 5px;
+    color: white;
+    font-size: 0.8em;
+    margin: 0;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+/* --- BARRA DE NAVEGAÇÃO INFERIOR (FOOTER) --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px;
+    height: 50px;
+    background-color: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #888;
+    font-size: 1.4em;
+    z-index: 1000;
+}
+
+.active-icon {
+    color: #000;
+}
+
+.add-button {
+    background-color: #fe2c55;
+    color: white;
+    width: 35px;
+    height: 25px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    position: relative;
+    top: -5px; /* Simula o botão elevado */
+}
+
+/* --- RESPONSIVIDADE: Ajuste para Telas Maiores (Desktops) --- */
+/* Em telas maiores, centralizamos a simulação, mas o design em si é "mobile-first" */
+@media (min-width: 451px) {
+    body {
+        background-color: #ddd;
+    }
+}
