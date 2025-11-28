@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok UI</title>
+    <style>
+        /* --- Configurações Gerais --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #000;
+        }
+
+        /* --- Simulação da Tela do Celular --- */
+        .tiktok-screen {
+            width: 375px;
+            height: 800px;
+            background-color: #ffffff;
+            border: 1px solid #dbdbdb;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- 
+           PÁGINA 1: INBOX 
+        --- */
+        
+        .inbox-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; }
+        .inbox-header h1 { font-size: 18px; font-weight: 700; margin: 0; position: relative; }
+        .inbox-header h1::after { content: ''; width: 8px; height: 8px; background-color: #25d366; border-radius: 50%; position: absolute; top: 2px; right: -12px; border: 1px solid white; }
+        .inbox-header .search-icon { font-size: 24px; font-weight: bold; transform: scaleX(-1); cursor: pointer; }
+        .header-icon-placeholder { width: 24px; }
+        .stories-bar { display: flex; padding: 16px; overflow-x: auto; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; scrollbar-width: none; -ms-overflow-style: none; }
+        .stories-bar::-webkit-scrollbar { display: none; }
+        .story-item { display: flex; flex-direction: column; align-items: center; margin-right: 16px; width: 60px; flex-shrink: 0; cursor: pointer; }
+        .story-item span { font-size: 12px; color: #555; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
+        .story-avatar { width: 56px; height: 56px; border-radius: 50%; position: relative; display: flex; justify-content: center; align-items: center; background-color: #eee; }
+        .story-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .create-avatar { border: 1px dashed #ccc; }
+        .create-avatar img { opacity: 0.7; }
+        .create-plus-icon { position: absolute; bottom: -2px; right: -2px; background-color: #2086f7; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 16px; font-weight: bold; display: flex; justify-content: center; align-items: center; border: 2px solid white; }
+        .news-avatar { border: 2px solid #e0e0e0; }
+        .story-ring-avatar { padding: 2px; border: 2px solid; border-image-slice: 1; border-image-source: linear-gradient(to right bottom, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); }
+        .live-badge { position: absolute; bottom: -3px; background-color: #ff004f; color: white; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 4px; border: 1.5px solid white; letter-spacing: 0.5px; }
+        .message-list { flex-grow: 1; overflow-y: auto; }
+        .message-item { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; }
+        .message-item:hover { background-color: #f9f9f9; }
+        .message-icon { width: 48px; height: 48px; border-radius: 50%; background-color: #eee; margin-right: 12px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; font-size: 24px; overflow: hidden; }
+        .message-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .system-icon { background-color: #eef7f6; color: #43c9b0; font-size: 20px;}
+        .shop-icon { background-color: #fff8e5; color: #fec92c; }
+        .blurred-icon { background-color: #c5d7e8; }
+        .blurred-icon-2 { background-color: #e8c5e1; }
+        .message-content { flex-grow: 1; overflow: hidden; }
+        .message-sender { display: block; font-weight: 600; font-size: 15px; }
+        .message-preview { display: block; font-size: 14px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .message-preview.blurred-text { color: #b0c4de; background-color: #f0f4f8; border-radius: 4px; display: inline-block; }
+        .message-meta { font-size: 12px; color: #999; margin-left: 10px; flex-shrink: 0; }
+        .message-arrow { font-weight: bold; color: #ccc; font-size: 16px; }
+        .bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 5px 0 10px 0; border-top: 1px solid #f0f0f0; background-color: #ffffff; flex-shrink: 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #888; cursor: pointer; }
+        .nav-item span:first-child { font-size: 24px; margin-bottom: 2px; }
+        .nav-item.active { color: #000; font-weight: 700; }
+        .nav-item .friends-count { position: relative; }
+        .nav-item .friends-count::after { content: '4'; position: absolute; top: -2px; right: -10px; background-color: #ff004f; color: white; font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 10px; }
+        .nav-item.create-button { width: 48px; height: 32px; background-color: #000; color: white; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 28px; font-weight: 300; margin-top: -5px; }
+        .nav-item.create-button span { margin: 0; line-height: 1; }
+        
+        /* --- 
+           PÁGINA 2: CONVERSA (DM)
+        --- */
+        
+        #dm-page { display: none; background-color: #fff; }
+        
+        /* Cabeçalho da Conversa com o Botão Voltar */
+        .dm-header { 
+            display: flex; 
+            align-items: center; 
+            /* AQUI ESTÁ A MUDANÇA: padding-top aumentado para 40px */
+            padding: 40px 16px 12px 16px; 
+            border-bottom: 1px solid #f0f0f0; 
+            flex-shrink: 0; 
+        }
+        .dm-header .back-icon { 
+            font-size: 24px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+        .dm-header .user-info { display: flex; align-items: center; flex-grow: 1; margin: 0 12px; }
+        .dm-header .avatar { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
+        .dm-header .user-name { font-weight: 700; font-size: 16px; }
+        .dm-header .user-status { font-size: 12px; color: #888; }
+        .dm-header .flag-icon { font-size: 20px; cursor: pointer; }
+
+        .chat-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            background-color: #ffffff;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            transition: padding-bottom 0.3s ease-in-out;
+        }
+        .timestamp { text-align: center; font-size: 12px; color: #999; margin-bottom: 20px; }
+        
+        /* Mensagem original (post de vídeo) */
+        .message-container { display: flex; flex-direction: column; margin-bottom: 10px; }
+        .message-container.sent { align-items: flex-end; position: relative; }
+        .share-icon { font-size: 20px; color: #888; position: absolute; left: -40px; bottom: 20px; }
+        .message-bubble { max-width: 65%; border-radius: 16px; background-color: #f0f0f0; }
+        .video-post { position: relative; border-radius: 16px; overflow: hidden; cursor: pointer; }
+        .video-post .video-thumb { width: 100%; display: block; aspect-ratio: 9 / 16; object-fit: cover; }
+        .video-post .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 40px; text-shadow: 0 0 8px rgba(0,0,0,0.5); }
+        .video-post .video-text { position: absolute; top: 60%; left: 50%; width: 90%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; padding: 6px 10px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center; }
+        .video-post .video-author { position: absolute; bottom: 10px; left: 10px; display: flex; align-items: center; }
+        .video-post .author-avatar { width: 24px; height: 24px; border-radius: 50%; margin-right: 6px; border: 1px solid rgba(255,255,255,0.5); }
+        .video-post .author-name { color: white; font-size: 12px; font-weight: 600; text-shadow: 0 0 3px rgba(0,0,0,0.7); }
+        .message-status { font-size: 10px; color: #999; margin-top: 4px; margin-right: 5px; align-self: flex-end; }
+        
+        /* Novas mensagens de texto enviadas */
+        .message-container.sent-text {
+            align-items: flex-end; /* Alinha à direita */
+        }
+        .message-bubble.sent-text {
+            background-color: #007aff; /* Azul do iMessage */
+            color: white;
+            padding: 10px 14px;
+            font-size: 15px;
+            word-wrap: break-word; /* Quebra o texto */
+            max-width: 70%;
+        }
+
+        .message-input-bar {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-top: 1px solid #f0f0f0;
+            background-color: #fff;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 10;
+        }
+        #message-input {
+            flex-grow: 1;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 15px;
+            outline: none;
+        }
+        .message-input-bar .emoji-icon {
+            font-size: 24px;
+            margin-left: 12px;
+            color: #555; /* Cor padrão, sempre clicável */
+            cursor: pointer;
+        }
+        .message-input-bar .send-button {
+            font-size: 24px;
+            margin-left: 12px;
+            color: #ccc; /* Cinza (desabilitado) */
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        /* Classe ativa para o botão de enviar */
+        .message-input-bar .send-button.active {
+            color: #007aff; /* Azul (habilitado) */
+        }
+
+        /* --- 2.4. Teclados Simulados --- */
+        
+        /* Contêiner comum para ambos os teclados */
+        .keyboard-panel {
+            height: auto;
+            background-color: #2c2c2e;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            z-index: 5;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+            padding: 8px 4px;
+            box-sizing: border-box;
+        }
+        
+        .keyboard-panel.active {
+            transform: translateY(0);
+        }
+        
+        /* Ajuste do Chat quando o teclado está visível */
+        .chat-area.keyboard-visible {
+            transition: padding-bottom 0.3s ease-in-out; 
+        }
+        
+        /* Teclado QWERTY */
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+        .keyboard-row:last-child { margin-bottom: 0; }
+        
+        .key {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #4a4a4c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            height: 44px;
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0 3px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-transform: lowercase;
+            flex-grow: 1;
+            flex-basis: 0;
+            min-width: 30px;
+        }
+        .key:active { background-color: #6a6a6c; }
+        .key.special { background-color: #3a3a3c; flex-grow: 1.5; }
+        .key.space { flex-grow: 8; }
+
+        /* Novo Teclado de Emoji */
+        #emoji-keyboard {
+            background-color: #f7f7f7; /* Fundo mais claro para emojis */
+            height: 240px; /* Altura fixa */
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap; /* Faz os emojis quebrarem a linha */
+            align-content: flex-start;
+        }
+        
+        .emoji-key {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 4px;
+            flex-basis: 12.5%; /* 8 emojis por linha */
+            box-sizing: border-box;
+        }
+        .emoji-key:active { transform: scale(0.9); }
+
+    </style>
+</head>
+<body>
+
+    <div id="inbox-page" class="tiktok-screen">
+        <header class="inbox-header">
+            <div class="header-icon-placeholder"></div>
+            <h1>Inbox</h1>
+            <div class="search-icon">🔎</div>
+        </header>
+        <section class="stories-bar">
+            <div class="story-item">
+                <div class="story-avatar create-avatar"><img src="https" alt="Create"><div class="create-plus-icon">+</div></div>
+                <span>Create</span>
+            </div>
+            <div class="story-item">
+                <div class="story-avatar news-avatar"><img src="https" alt="ABC News"></div>
+                <span>ABC News</span>
+            </div>
+            <div class="story-item">
+                <div class="story-avatar story-ring-avatar"><img src="https" alt="Simon Squibb"><div class="live-badge">LIVE</div></div>
+                <span>Simon Squi...</span>
+            </div>
+            <div class="story-item">
+                <div class="story-avatar story-ring-avatar"><img src="https" alt="Eric Miller"><div class="live-badge">LIVE</div></div>
+                <span>Eric Miller</span>
+            </div>
+            <div class="story-item">
+                <div class="story-avatar"><img src="https" alt="Sarah"></div>
+                <span>Sarah</span>
+            </div>
+        </section>
+        <main class="message-list">
+            <div class="message-item">
+                <div class="message-icon blurred-icon"></div>
+                <div class="message-content"><span class="message-sender">Nome Borrado 1</span><span class="message-preview blurred-text">Mensagem de texto borrada...</span></div>
+                <div class="message-meta"><span class="message-arrow">></span></div>
+            </div>
+            <div class="message-item">
+                <div class="message-icon blurred-icon-2"></div>
+                <div class="message-content"><span class="message-sender">Nome Borrado 2</span><span class="message-preview blurred-text">Outra mensagem borrada...</span></div>
+                <div class="message-meta"><span class="message-arrow">></span></div>
+            </div>
+             <div class="message-item">
+                <div class="message-icon"><img src="https" alt="User"></div>
+                <div class="message-content"><span class="message-sender">YouTube</span><span class="message-preview blurred-text">Mensagem de texto borrada...</span></div>
+                <div class="message-meta"></div>
+            </div>
+             <div class="message-item">
+                <div class="message-icon"><img src="https" alt="User"></div>
+                <div class="message-content"><span class="message-sender">Amy A</span><span class="message-preview blurred-text">Mensagem de texto borrada...</span></div>
+                <div class="message-meta"></div>
+            </div>
+             <div class="message-item">
+                <div class="message-icon"><img src="https" alt="User"></div>
+                <div class="message-content"><span class="message-sender">Andy K</span><span class="message-preview blurred-text">Mensagem de texto borrada...</span></div>
+                <div class="message-meta"></div>
+            </div>
+            <div class="message-item">
+                <div class="message-icon system-icon">🛍️</div>
+                <div class="message-content"><span class="message-sender">System notifications</span><span class="message-preview">LIVE: It's not too late to tune into ...</span></div>
+                <div class="message-meta"><span class="message-time">1d</span></div>
+            </div>
+            <div class="message-item">
+                <div class="message-icon shop-icon">🛒</div>
+                <div class="message-content"><span class="message-sender">TikTok Shop</span><span class="message-preview">Shop updates Review your order</span></div>
+                <div class="message-meta"><span class="message-time">1/28</span></div>
+            </div>
+        </main>
+        <nav class="bottom-nav">
+            <div class="nav-item"><span>🏠</span><span>Home</span></div>
+            <div class="nav-item"><span class="friends-count">🧑‍🤝‍🧑</span><span>Friends</span></div>
+            <div class="nav-item create-button"><span>+</span></div>
+            <div class="nav-item active"><span>📥</span><span>Inbox</span></div>
+            <div class="nav-item"><span>👤</span><span>Profile</span></div>
+        </nav>
+    </div>
+    
+    <div id="dm-page" class="tiktok-screen">
+        
+        <header class="dm-header">
+            <div class="back-icon">←</div>
+            
+            <div class="user-info">
+                <img src="https" alt="Amy Fisher" class="avatar">
+                <div class="user-details">
+                    <div class="user-name">Amy Fisher</div>
+                    <div class="user-status">Active yesterday</div>
+                </div>
+            </div>
+            <div class="flag-icon">⚐</div>
+        </header>
+        
+        <main class="chat-area">
+            <div class="timestamp">Today 9:04 AM</div>
+            <div class="message-container sent">
+                <div class="share-icon">↪</div>
+                <div class="message-bubble">
+                    <div class="video-post">
+                        <img src="https" alt="Video thumbnail" class="video-thumb">
+                        <div class="play-icon">►</div>
+                        <div class="video-text">I'll never stop buying the cheapest option and regretting it.</div>
+                        <div class="video-author">
+                            <img src="https" alt="Maggie" class="author-avatar">
+                            <span class="author-name">Maggie McGaug...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="message-status">Sent</div>
+            </div>
+            </main>
+        
+        <footer class="message-input-bar">
+            <input type="text" id="message-input" placeholder="Send a message..." readonly>
+            <span class="emoji-icon" id="toggle-keyboard-button">🙂</span>
+            <span class="send-button" id="send-button">➤</span>
+        </footer>
+        
+        <div id="qwerty-keyboard" class="keyboard-panel">
+            <div class="keyboard-row">
+                <button class="key">q</button><button class="key">w</button><button class="key">e</button><button class="key">r</button><button class="key">t</button><button class="key">y</button><button class="key">u</button><button class="key">i</button><button class="key">o</button><button class="key">p</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key">a</button><button class="key">s</button><button class="key">d</button><button class="key">f</button><button class="key">g</button><button class="key">h</button><button class="key">j</button><button class="key">k</button><button class="key">l</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key">z</button><button class="key">x</button><button class="key">c</button><button class="key">v</button><button class="key">b</button><button class="key">n</button><button class="key">m</button><button class="key special" data-key="backspace">⌫</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key special space" data-key="space"> </button>
+            </div>
+        </div>
+        
+        <div id="emoji-keyboard" class="keyboard-panel">
+            <button class="emoji-key">😀</button><button class="emoji-key">😂</button><button class="emoji-key">😍</button><button class="emoji-key">🤔</button><button class="emoji-key">😎</button><button class="emoji-key">😭</button><button class="emoji-key">🥳</button><button class="emoji-key">🤯</button>
+            <button class="emoji-key">👍</button><button class="emoji-key">👎</button><button class="emoji-key">🔥</button><button class="emoji-key">💯</button><button class="emoji-key">👏</button><button class="emoji-key">🙏</button><button class="emoji-key">👀</button><button class="emoji-key">🤷</button>
+            <button class="emoji-key">❤️</button><button class="emoji-key">🎉</button><button class="emoji-key">✨</button><button class="emoji-key">💔</button><button class="emoji-key">👋</button><button class="emoji-key">👌</button><button class="emoji-key">🤞</button><button class="emoji-key">🚀</button>
+            </div>
+    </div>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Referências aos elementos ---
+            const inboxPage = document.getElementById('inbox-page');
+            const dmPage = document.getElementById('dm-page');
+            const messageItems = document.querySelectorAll('.message-item');
+            
+            // Elementos da Página 2 (DM)
+            // AQUI ESTÁ A REFERÊNCIA AO BOTÃO DE VOLTAR
+            const backButton = document.querySelector('.dm-header .back-icon');
+            const messageInput = document.getElementById('message-input');
+            const chatArea = document.querySelector('.chat-area');
+            const sendButton = document.getElementById('send-button');
+            const toggleKeyboardButton = document.getElementById('toggle-keyboard-button');
+            
+            // Teclados
+            const qwertyKeyboard = document.getElementById('qwerty-keyboard');
+            const emojiKeyboard = document.getElementById('emoji-keyboard');
+            
+            // --- Navegação entre páginas ---
+            
+            function goToDmPage() {
+                inboxPage.style.display = 'none';
+                dmPage.style.display = 'flex';
+            }
+            
+            // AQUI ESTÁ A FUNÇÃO QUE O BOTÃO DE VOLTAR CHAMA
+            function goToInboxPage() {
+                inboxPage.style.display = 'flex';
+                dmPage.style.display = 'none';
+                hideKeyboard(); // Garante que o teclado feche ao voltar
+            }
+
+            messageItems.forEach(item => {
+                item.addEventListener('click', goToDmPage);
+            });
+            
+            // AQUI ESTÁ O EVENTO DE CLIQUE DO BOTÃO DE VOLTAR
+            backButton.addEventListener('click', goToInboxPage);
+            
+            
+            // --- Lógica dos Teclados ---
+
+            // Função para ajustar o padding do chat
+            function adjustChatAreaHeight(keyboardHeight) {
+                chatArea.style.paddingBottom = keyboardHeight + 'px';
+                chatArea.classList.add('keyboard-visible');
+                // Rola o chat para o final
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            // Função para mostrar o teclado QWERTY
+            function showKeyboard() {
+                emojiKeyboard.classList.remove('active'); // Garante que o de emoji está fechado
+                qwertyKeyboard.classList.add('active');
+                toggleKeyboardButton.innerText = '🙂'; // Define o ícone para emoji
+                
+                // Força o cálculo da altura APÓS ser exibido
+                requestAnimationFrame(() => {
+                     adjustChatAreaHeight(qwertyKeyboard.offsetHeight);
+                });
+            }
+
+            // Função para esconder TODOS os teclados
+            function hideKeyboard() {
+                messageInput.blur(); // Tira o foco do input
+                qwertyKeyboard.classList.remove('active');
+                emojiKeyboard.classList.remove('active');
+                chatArea.classList.remove('keyboard-visible');
+                chatArea.style.paddingBottom = '0px'; // Reseta o padding
+                toggleKeyboardButton.innerText = '🙂'; // Reseta o ícone
+            }
+
+            // Quando o usuário CLICA NO INPUT (agora 'readonly')
+            messageInput.addEventListener('click', (e) => {
+                e.preventDefault();
+                showKeyboard();
+            });
+            
+            // Quando o usuário CLICA FORA (na área do chat)
+            chatArea.addEventListener('click', () => {
+                hideKeyboard();
+            });
+
+            // --- Lógica do Botão de Enviar ---
+            
+            // 1. Ativar/Desativar o botão
+            function updateSendButtonState() {
+                if (messageInput.value.trim() !== '') {
+                    sendButton.classList.add('active');
+                } else {
+                    sendButton.classList.remove('active');
+                }
+            }
+            
+            // 2. Enviar a mensagem
+            function sendMessage() {
+                const messageText = messageInput.value.trim();
+                
+                if (messageText === '') return; // Não envia nada se estiver vazio
+                
+                // Cria os elementos da nova mensagem
+                const messageContainer = document.createElement('div');
+                messageContainer.className = 'message-container sent-text';
+                
+                const messageBubble = document.createElement('div');
+                messageBubble.className = 'message-bubble sent-text';
+                messageBubble.innerText = messageText;
+                
+                messageContainer.appendChild(messageBubble);
+                chatArea.appendChild(messageContainer);
+                
+                // Limpa o input e desativa o botão
+                messageInput.value = '';
+                updateSendButtonState();
+                
+                // Rola para a nova mensagem
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+            
+            sendButton.addEventListener('click', sendMessage);
+
+            // --- Lógica do Teclado QWERTY ---
+            qwertyKeyboard.addEventListener('click', (e) => {
+                e.stopPropagation(); // Impede que o chat feche o teclado
+                const target = e.target;
+                
+                if (target.classList.contains('key')) {
+                    const key = target.dataset.key;
+                    const value = target.innerText;
+                    
+                    if (key === 'backspace') {
+                        messageInput.value = messageInput.value.slice(0, -1);
+                    } else if (key === 'space') {
+                        messageInput.value += ' ';
+                    } else if (value && !key) {
+                        messageInput.value += value;
+                    }
+                    
+                    updateSendButtonState(); // Verifica se o botão de enviar deve ser ativado
+                    messageInput.focus();
+                }
+            });
+
+            // --- Lógica do Botão de Troca (Emoji/Teclado) ---
+            toggleKeyboardButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                if (qwertyKeyboard.classList.contains('active')) {
+                    // Troca para Emoji
+                    qwertyKeyboard.classList.remove('active');
+                    emojiKeyboard.classList.add('active');
+                    toggleKeyboardButton.innerText = '⌨️';
+                    adjustChatAreaHeight(emojiKeyboard.offsetHeight);
+                } else if (emojiKeyboard.classList.contains('active')) {
+                    // Troca para QWERTY
+                    emojiKeyboard.classList.remove('active');
+                    qwertyKeyboard.classList.add('active');
+                    toggleKeyboardButton.innerText = '🙂';
+                    adjustChatAreaHeight(qwertyKeyboard.offsetHeight);
+                }
+            });
+
+            // --- Lógica do Teclado de Emoji ---
+            emojiKeyboard.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const target = e.target;
+                
+                if (target.classList.contains('emoji-key')) {
+                    messageInput.value += target.innerText;
+                    updateSendButtonState(); // Ativa o botão de enviar
+                    messageInput.focus();
+                }
+            });
+            
+        });
+    </script>
+
+</body>
+</html>
