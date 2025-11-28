@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Clone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            background-color: #000;
+        }
+        
+        /* Barra superior */
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+        }
+        
+        .top-bar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .top-bar .following {
+            opacity: 0.7;
+        }
+        
+        .top-bar .for-you {
+            position: relative;
+        }
+        
+        .top-bar .for-you::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+        }
+        
+        /* Conteúdo principal - vídeos */
+        .video-feed {
+            flex: 1;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            position: relative;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .video-feed::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .video-container {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            scroll-snap-align: start;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Informações do vídeo */
+        .video-info {
+            position: absolute;
+            bottom: 80px;
+            left: 15px;
+            right: 15px;
+            z-index: 5;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid white;
+        }
+        
+        .username {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .follow-btn {
+            background-color: #fe2c55;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .video-caption {
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .sound-info {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #ddd;
+        }
+        
+        .sound-info i {
+            margin-right: 5px;
+        }
+        
+        /* Barra lateral de interações */
+        .interaction-bar {
+            position: absolute;
+            right: 15px;
+            bottom: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+        }
+        
+        .interaction-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .interaction-btn i {
+            font-size: 28px;
+            margin-bottom: 5px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .interaction-btn span {
+            font-size: 13px;
+        }
+        
+        .like-btn.active i {
+            color: #fe2c55;
+        }
+        
+        .album-cover {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 2px solid white;
+            animation: spin 5s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Barra inferior de navegação */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background-color: #000;
+            border-top: 1px solid #333;
+            z-index: 10;
+        }
+        
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+            background: none;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .nav-btn i {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
+        
+        .nav-btn.active {
+            color: #fff;
+        }
+        
+        .nav-btn:not(.active) {
+            color: #999;
+        }
+        
+        .upload-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #fe2c55, #ff6b35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        /* Modal de upload */
+        .upload-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .upload-content {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .upload-content h2 {
+            margin-bottom: 20px;
+        }
+        
+        .upload-options {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .upload-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .upload-option i {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #fe2c55;
+        }
+        
+        .close-modal {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* Efeitos de animação para interações */
+        .heart-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: #fe2c55;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 20;
+        }
+        
+        @keyframes heartBeat {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+        
+        /* Indicador de vídeo atual */
+        .video-indicator {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 5;
+        }
+        
+        .video-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .video-dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Barra superior -->
+        <div class="top-bar">
+            <button class="following">Seguindo</button>
+            <button class="for-you">Para Você</button>
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        
+        <!-- Indicador de vídeo atual -->
+        <div class="video-indicator" id="videoIndicator">
+            <!-- Será preenchido via JavaScript -->
+        </div>
+        
+        <!-- Feed de vídeos -->
+        <div class="video-feed" id="videoFeed">
+            <!-- Os vídeos serão inseridos via JavaScript -->
+        </div>
+        
+        <!-- Barra de navegação inferior -->
+        <div class="bottom-nav">
+            <button class="nav-btn active">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </button>
+            <button class="nav-btn">
+                <i class="fas fa-compass"></i>
+                <span>Descobrir</span>
+            </button>
+            <div class="upload-btn" onclick="openUploadModal()">
+                <i class="fas fa-plus"></i>
+            </div>
+            <button class="nav-btn">
+                <i class="fas fa-comment-dots"></i>
+                <span>Inbox</span>
+            </button>
+            <button class="nav-btn">
+                <i class="fas fa-user"></i>
+                <span>Eu</span>
+            </button>
+        </div>
+        
+        <!-- Modal de upload -->
+        <div class="upload-modal" id="uploadModal">
+            <div class="upload-content">
+                <h2>Criar vídeo</h2>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="uploadVideo()">
+                        <i class="fas fa-upload"></i>
+                        <span>Enviar</span>
+                    </div>
+                    <div class="upload-option" onclick="recordVideo()">
+                        <i class="fas fa-video"></i>
+                        <span>Gravar</span>
+                    </div>
+                </div>
+                <button class="close-modal" onclick="closeUploadModal()">Fechar</button>
+            </div>
+        </div>
+        
+        <!-- Animação de coração -->
+        <div class="heart-animation" id="heartAnimation">
+            <i class="fas fa-heart"></i>
+        </div>
+    </div>
+
+    <script>
+        // Dados dos vídeos
+        const videos = [
+            {
+                id: 1,
+                username: "@mariaalves",
+                avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+                caption: "Dançando na chuva! 🌧️ #dance #chuva",
+                likes: "125.4K",
+                comments: "2.3K",
+                shares: "1.5K",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-1232-large.mp4"
+            },
+            {
+                id: 2,
+                username: "@carlosedu",
+                avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                caption: "Natureza é vida! 🌳 #natureza #paisagem",
+                likes: "89.7K",
+                comments: "1.8K",
+                shares: "932",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4"
+            },
+            {
+                id: 3,
+                username: "@aninhagameplay",
+                avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+                caption: "Novo jogo chegando! 🎮 #gaming #games",
+                likes: "210.2K",
+                comments: "5.7K",
+                shares: "3.2K",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4"
+            },
+            {
+                id: 4,
+                username: "@chefjulia",
+                avatar: "https://randomuser.me/api/portraits/women/26.jpg",
+                caption: "Receita fácil de bolo! 🍰 #culinária #receitas",
+                likes: "156.8K",
+                comments: "4.1K",
+                shares: "2.7K",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cooking-ingredients-in-a-pan-8906-large.mp4"
+            },
+            {
+                id: 5,
+                username: "@viagensdomundo",
+                avatar: "https://randomuser.me/api/portraits/men/22.jpg",
+                caption: "Conheçam esta praia incrível! 🏖️ #viagem #praia",
+                likes: "98.3K",
+                comments: "2.9K",
+                shares: "1.8K",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-white-sand-beach-and-palm-trees-1560-large.mp4"
+            },
+            {
+                id: 6,
+                username: "@malharagora",
+                avatar: "https://randomuser.me/api/portraits/women/63.jpg",
+                caption: "Treino de hoje! 💪 #fitness #academia",
+                likes: "76.5K",
+                comments: "1.2K",
+                shares: "845",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-girl-training-with-a-boxing-punching-ball-39895-large.mp4"
+            },
+            {
+                id: 7,
+                username: "@techreview",
+                avatar: "https://randomuser.me/api/portraits/men/41.jpg",
+                caption: "Review do novo smartphone! 📱 #tecnologia #review",
+                likes: "142.6K",
+                comments: "3.8K",
+                shares: "2.1K",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-close-up-typing-on-a-laptop-44759-large.mp4"
+            },
+            {
+                id: 8,
+                username: "@petsfofos",
+                avatar: "https://randomuser.me/api/portraits/women/33.jpg",
+                caption: "Meu gato sendo fofo hoje! 😻 #gatos #pets",
+                likes: "321.9K",
+                comments: "8.7K",
+                shares: "4.5K",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-grey-kitten-lying-down-and-looking-at-the-camera-22610-large.mp4"
+            },
+            {
+                id: 9,
+                username: "@musicaemcasa",
+                avatar: "https://randomuser.me/api/portraits/men/67.jpg",
+                caption: "Cover da música do momento! 🎵 #cover #música",
+                likes: "187.4K",
+                comments: "4.9K",
+                shares: "3.3K",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-singing-while-playing-guitar-39821-large.mp4"
+            },
+            {
+                id: 10,
+                username: "@artistaplastic",
+                avatar: "https://randomuser.me/api/portraits/women/57.jpg",
+                caption: "Processo de criação! 🎨 #arte #pintura",
+                likes: "95.2K",
+                comments: "2.4K",
+                shares: "1.6K",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-artist-painting-on-a-canvas-12-large.mp4"
+            }
+        ];
+
+        // Inicializar a interface
+        function initializeApp() {
+            const videoFeed = document.getElementById('videoFeed');
+            const videoIndicator = document.getElementById('videoIndicator');
+            
+            // Criar os vídeos
+            videos.forEach((video, index) => {
+                // Criar container do vídeo
+                const videoContainer = document.createElement('div');
+                videoContainer.className = 'video-container';
+                videoContainer.id = `video-${video.id}`;
+                
+                // Criar elemento de vídeo
+                const videoElement = document.createElement('video');
+                videoElement.className = 'video-player';
+                videoElement.loop = true;
+                videoElement.muted = true;
+                
+                const sourceElement = document.createElement('source');
+                sourceElement.src = video.videoUrl;
+                sourceElement.type = 'video/mp4';
+                
+                videoElement.appendChild(sourceElement);
+                
+                // Criar informações do vídeo
+                const videoInfo = document.createElement('div');
+                videoInfo.className = 'video-info';
+                
+                videoInfo.innerHTML = `
+                    <div class="user-info">
+                        <img src="${video.avatar}" alt="Avatar" class="avatar">
+                        <span class="username">${video.username}</span>
+                        <button class="follow-btn">Seguir</button>
+                    </div>
+                    <p class="video-caption">${video.caption}</p>
+                    <div class="sound-info">
+                        <i class="fas fa-music"></i>
+                        <span>Som original - ${video.username}</span>
+                    </div>
+                `;
+                
+                // Criar barra de interações
+                const interactionBar = document.createElement('div');
+                interactionBar.className = 'interaction-bar';
+                
+                interactionBar.innerHTML = `
+                    <div class="interaction-btn like-btn" onclick="toggleLike(this)">
+                        <i class="fas fa-heart"></i>
+                        <span>${video.likes}</span>
+                    </div>
+                    <div class="interaction-btn" onclick="showComments()">
+                        <i class="fas fa-comment"></i>
+                        <span>${video.comments}</span>
+                    </div>
+                    <div class="interaction-btn" onclick="shareVideo()">
+                        <i class="fas fa-share"></i>
+                        <span>${video.shares}</span>
+                    </div>
+                    <img src="https://i.pinimg.com/236x/3a/3d/4a/3a3d4a8a8c3455e936b4f7b1c5d5e5a5.jpg" alt="Album Cover" class="album-cover">
+                `;
+                
+                // Montar o container do vídeo
+                videoContainer.appendChild(videoElement);
+                videoContainer.appendChild(videoInfo);
+                videoContainer.appendChild(interactionBar);
+                
+                // Adicionar ao feed
+                videoFeed.appendChild(videoContainer);
+                
+                // Criar indicador de vídeo
+                const dot = document.createElement('div');
+                dot.className = `video-dot ${index === 0 ? 'active' : ''}`;
+                dot.dataset.videoId = video.id;
+                videoIndicator.appendChild(dot);
+            });
+            
+            // Reproduzir o primeiro vídeo
+            playVideo(1);
+            
+            // Configurar observador de interseção para detectar vídeo visível
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const videoId = parseInt(entry.target.id.split('-')[1]);
+                        playVideo(videoId);
+                        updateVideoIndicator(videoId);
+                    }
+                });
+            }, { threshold: 0.8 });
+            
+            // Observar todos os containers de vídeo
+            document.querySelectorAll('.video-container').forEach(container => {
+                observer.observe(container);
+            });
+        }
+        
+        // Reproduzir vídeo específico
+        function playVideo(videoId) {
+            // Pausar todos os vídeos
+            document.querySelectorAll('.video-player').forEach(video => {
+                video.pause();
+            });
+            
+            // Reproduzir vídeo atual
+            const currentVideo = document.querySelector(`#video-${videoId} .video-player`);
+            if (currentVideo) {
+                currentVideo.play().catch(e => console.log("Autoplay bloqueado:", e));
+            }
+        }
+        
+        // Atualizar indicador de vídeo atual
+        function updateVideoIndicator(videoId) {
+            document.querySelectorAll('.video-dot').forEach(dot => {
+                dot.classList.remove('active');
+                if (parseInt(dot.dataset.videoId) === videoId) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+        
+        // Alternar entre curtir e não curtir
+        function toggleLike(button) {
+            const heartIcon = button.querySelector('i');
+            const countSpan = button.querySelector('span');
+            
+            if (button.classList.contains('active')) {
+                // Remover curtida
+                button.classList.remove('active');
+                heartIcon.classList.remove('fas');
+                heartIcon.classList.add('far');
+                
+                // Diminuir contador
+                let count = parseFloat(countSpan.textContent);
+                countSpan.textContent = (count - 0.1).toFixed(1) + 'K';
+            } else {
+                // Adicionar curtida
+                button.classList.add('active');
+                heartIcon.classList.remove('far');
+                heartIcon.classList.add('fas');
+                
+                // Aumentar contador
+                let count = parseFloat(countSpan.textContent);
+                countSpan.textContent = (count + 0.1).toFixed(1) + 'K';
+                
+                // Mostrar animação de coração
+                showHeartAnimation();
+            }
+        }
+        
+        // Mostrar animação de coração ao curtir
+        function showHeartAnimation() {
+            const heart = document.getElementById('heartAnimation');
+            heart.style.animation = 'none';
+            heart.offsetHeight; // Trigger reflow
+            heart.style.animation = 'heartBeat 1s ease';
+            
+            setTimeout(() => {
+                heart.style.animation = 'none';
+            }, 1000);
+        }
+        
+        // Abrir modal de upload
+        function openUploadModal() {
+            document.getElementById('uploadModal').style.display = 'flex';
+        }
+        
+        // Fechar modal de upload
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+        }
+        
+        // Funções para upload e gravação
+        function uploadVideo() {
+            alert('Abrir seletor de arquivos para upload de vídeo');
+            closeUploadModal();
+        }
+        
+        function recordVideo() {
+            alert('Abrir câmera para gravar vídeo');
+            closeUploadModal();
+        }
+        
+        // Funções para comentários e compartilhamento
+        function showComments() {
+            alert('Abrir seção de comentários');
+        }
+        
+        function shareVideo() {
+            alert('Abrir opções de compartilhamento');
+        }
+        
+        // Navegação entre abas
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Alternar entre "Seguindo" e "Para Você"
+        document.querySelector('.following').addEventListener('click', function() {
+            document.querySelector('.following').classList.add('active');
+            document.querySelector('.for-you').classList.remove('active');
+            alert('Mostrando conteúdo de quem você segue');
+        });
+        
+        document.querySelector('.for-you').addEventListener('click', function() {
+            document.querySelector('.for-you').classList.add('active');
+            document.querySelector('.following').classList.remove('active');
+            alert('Mostrando conteúdo para você');
+        });
+        
+        // Pausar/reproduzir vídeo ao tocar na tela
+        document.addEventListener('click', function(e) {
+            // Verificar se o clique foi em um container de vídeo (não em um botão)
+            if (e.target.closest('.video-container') && 
+                !e.target.closest('.interaction-bar') && 
+                !e.target.closest('.video-info') &&
+                !e.target.closest('.follow-btn')) {
+                
+                const videoContainer = e.target.closest('.video-container');
+                const video = videoContainer.querySelector('.video-player');
+                
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            }
+        });
+        
+        // Inicializar o app quando a página carregar
+        window.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
