@@ -18,15 +18,16 @@
             color: #fff;
             overflow: hidden;
             height: 100vh;
+            width: 100vw;
         }
         
         .container {
             display: flex;
             height: 100vh;
-            max-width: 500px;
-            margin: 0 auto;
+            width: 100%;
             position: relative;
             background-color: #000;
+            overflow: hidden;
         }
         
         /* Barra superior */
@@ -75,6 +76,8 @@
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             position: relative;
+            width: 100%;
+            height: 100vh;
             scrollbar-width: none; /* Firefox */
         }
         
@@ -226,6 +229,7 @@
             border: none;
             font-size: 12px;
             cursor: pointer;
+            text-decoration: none;
         }
         
         .nav-btn i {
@@ -365,7 +369,7 @@
         
         <!-- Indicador de vídeo atual -->
         <div class="video-indicator" id="videoIndicator">
-            <!-- Será preenchido via JavaScript -->
+            <!-- Os indicadores serão inseridos via JavaScript -->
         </div>
         
         <!-- Feed de vídeos -->
@@ -375,7 +379,6 @@
         
         <!-- Barra de navegação inferior -->
         <div class="bottom-nav">
-    
             <a href="grazi.html" class="nav-btn"> 
                 <i class="fas fa-home"></i>
                 <span>Início</span>
@@ -386,7 +389,7 @@
                 <span>Descobrir</span>
             </a>
             
-            <div class="upload-btn"> 
+            <div class="upload-btn" onclick="openUploadModal()"> 
                 <i class="fas fa-plus"></i>
             </div>
             
@@ -399,9 +402,7 @@
                 <i class="fas fa-user"></i>
                 <span>Eu</span>
             </a>
-        
         </div>
-    </div>
         
         <!-- Modal de upload -->
         <div class="upload-modal" id="uploadModal">
@@ -438,7 +439,7 @@
                 likes: "125.4K",
                 comments: "2.3K",
                 shares: "1.5K",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-1232-large.mp4"
+                videoUrl: "./videos/video1.mp4"
             },
             {
                 id: 2,
@@ -448,7 +449,7 @@
                 likes: "89.7K",
                 comments: "1.8K",
                 shares: "932",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4"
+                videoUrl: "./videos/video2.mp4"
             },
             {
                 id: 3,
@@ -458,7 +459,7 @@
                 likes: "210.2K",
                 comments: "5.7K",
                 shares: "3.2K",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4"
+                videoUrl: "./videos/video1.mp4"
             },
             {
                 id: 4,
@@ -468,7 +469,7 @@
                 likes: "156.8K",
                 comments: "4.1K",
                 shares: "2.7K",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cooking-ingredients-in-a-pan-8906-large.mp4"
+                videoUrl: "./videos/video2.mp4"
             },
             {
                 id: 5,
@@ -478,57 +479,7 @@
                 likes: "98.3K",
                 comments: "2.9K",
                 shares: "1.8K",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-white-sand-beach-and-palm-trees-1560-large.mp4"
-            },
-            {
-                id: 6,
-                username: "@malharagora",
-                avatar: "https://randomuser.me/api/portraits/women/63.jpg",
-                caption: "Treino de hoje! 💪 #fitness #academia",
-                likes: "76.5K",
-                comments: "1.2K",
-                shares: "845",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-girl-training-with-a-boxing-punching-ball-39895-large.mp4"
-            },
-            {
-                id: 7,
-                username: "@techreview",
-                avatar: "https://randomuser.me/api/portraits/men/41.jpg",
-                caption: "Review do novo smartphone! 📱 #tecnologia #review",
-                likes: "142.6K",
-                comments: "3.8K",
-                shares: "2.1K",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-close-up-typing-on-a-laptop-44759-large.mp4"
-            },
-            {
-                id: 8,
-                username: "@petsfofos",
-                avatar: "https://randomuser.me/api/portraits/women/33.jpg",
-                caption: "Meu gato sendo fofo hoje! 😻 #gatos #pets",
-                likes: "321.9K",
-                comments: "8.7K",
-                shares: "4.5K",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-grey-kitten-lying-down-and-looking-at-the-camera-22610-large.mp4"
-            },
-            {
-                id: 9,
-                username: "@musicaemcasa",
-                avatar: "https://randomuser.me/api/portraits/men/67.jpg",
-                caption: "Cover da música do momento! 🎵 #cover #música",
-                likes: "187.4K",
-                comments: "4.9K",
-                shares: "3.3K",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-singing-while-playing-guitar-39821-large.mp4"
-            },
-            {
-                id: 10,
-                username: "@artistaplastic",
-                avatar: "https://randomuser.me/api/portraits/women/57.jpg",
-                caption: "Processo de criação! 🎨 #arte #pintura",
-                likes: "95.2K",
-                comments: "2.4K",
-                shares: "1.6K",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-artist-painting-on-a-canvas-12-large.mp4"
+                videoUrl: "./videos/video1.mp4"
             }
         ];
 
@@ -549,6 +500,8 @@
                 videoElement.className = 'video-player';
                 videoElement.loop = true;
                 videoElement.muted = true;
+                videoElement.playsInline = true;
+                videoElement.autoplay = index === 0; // Autoplay apenas para o primeiro vídeo
                 
                 const sourceElement = document.createElement('source');
                 sourceElement.src = video.videoUrl;
@@ -607,9 +560,6 @@
                 dot.dataset.videoId = video.id;
                 videoIndicator.appendChild(dot);
             });
-            
-            // Reproduzir o primeiro vídeo
-            playVideo(1);
             
             // Configurar observador de interseção para detectar vídeo visível
             const observer = new IntersectionObserver((entries) => {
