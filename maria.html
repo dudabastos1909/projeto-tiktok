@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <style>
+        
         
         body {
             font-family: Arial, sans-serif;
@@ -20,6 +23,8 @@
             width: 100%;
             max-width: 450px; 
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Adicionado padding-bottom para não sobrepor o último conteúdo */
+            padding-bottom: 50px; 
         }
 
         
@@ -69,7 +74,7 @@
             color: #888;
         }
 
-      
+        
         .actions {
             display: flex;
             justify-content: center;
@@ -107,7 +112,7 @@
             padding: 8px 20px;
         }
 
-       
+        
         .bio {
             text-align: center;
             padding: 0 20px 15px 20px;
@@ -121,7 +126,7 @@
             margin-top: 5px;
         }
 
-       
+        
         .video-nav {
             display: flex;
             justify-content: space-around;
@@ -206,19 +211,105 @@
             margin-right: 4px;
         }
 
-     
         
-        .mobile-footer {
+        /* --- CSS ADICIONADO PARA A NAVBAR INFERIOR --- */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
             height: 50px;
             background-color: #fff;
             border-top: 1px solid #ddd;
-            position: sticky;
+            
+            /* Muda de 'sticky' para 'fixed' para fixar na 
+              parte inferior da *tela*, não do container.
+            */
+            position: fixed; 
             bottom: 0;
+            
+            /* Define a largura para a largura máxima do container
+              e centraliza com margin: auto.
+            */
+            width: 100%;
+            max-width: 450px; /* Mesma largura do .profile-container */
+            margin: 0 auto; /* Ajuda na centralização com display:flex do body */
+            z-index: 1000;
         }
 
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #888; /* Cor padrão para inativos */
+            font-size: 10px; /* Tamanho pequeno para o texto */
+            flex: 1; /* Ocupa espaço igualmente */
+            height: 100%;
+        }
+
+        .nav-btn i {
+            font-size: 20px; /* Tamanho do ícone */
+            margin-bottom: 3px;
+        }
+
+        .nav-btn.active {
+            color: #000; /* Cor para o item ativo */
+            font-weight: 600;
+        }
+
+        .upload-btn {
+            background-color: #fe2c55; /* Cor de destaque */
+            color: white;
+            width: 45px; /* Largura do botão */
+            height: 30px; /* Altura do botão */
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            cursor: pointer;
+            flex-grow: 0; /* Não cresce */
+            flex-shrink: 0; /* Não encolhe */
+            margin: 0 10px; /* Espaçamento lateral */
+        }
+        /* --- FIM DO CSS DA NAVBAR --- */
+
+
+        .top-navbar {
+            display: flex;
+            justify-content: space-between; /* Espaço entre a esquerda e a direita */
+            align-items: center;
+            height: 44px; /* Altura típica de nav bars móveis */
+            padding: 0 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            position: sticky; /* Fica fixo no topo da tela */
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #000;
+        }
+
+        .nav-center {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+        }
     </style>
 </head>
 <body>
+    
 
     <div class="profile-container">
 
@@ -248,14 +339,14 @@
         </div>
 
         <div class="actions">
-       
+        
             <button class="btn-message">Editar perfil</button>
         </div>
 
         <div class="bio">
             <p>Hi :) </p>
             <div class="links">
-               
+                
             </div>
         </div>
 
@@ -278,16 +369,36 @@
                 <img src="charli 5.jpg" alt="Thumbnail de Vídeo">
                 <div class="video-views">3 mi</div>
             </div>
-           
+            
         </div>
 
-        <div class="mobile-footer"></div>
+        <div class="bottom-nav">
     
+            <a href="grazi.html" class="nav-btn"> 
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </a>
+            
+            <a href="grazi.html" class="nav-btn">
+                <i class="fas fa-compass"></i>
+                <span>Descobrir</span>
+            </a>
+            
+            <div class="upload-btn"> 
+                <i class="fas fa-plus"></i>
+            </div>
+            
+            <a href="samara.html" class="nav-btn active"> 
+                <i class="fas fa-comment-dots"></i>
+                <span>Inbox</span>
+            </a>
+            
+            <a href="maria.html" class="nav-btn">
+                <i class="fas fa-user"></i>
+                <span>Eu</span>
+            </a>
+        
+        </div>
 
-    </div>
-
-
-
-     
-</body>
+    </div> </body>
 </html>
